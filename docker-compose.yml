@@ -1,0 +1,35 @@
+version: '3.3'
+services:
+  psql:
+    container_name: psql-biz-app
+    image: postgres:14-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: ramonPass
+      POSTGRES_USER: ramon
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+    networks:
+      - psql-app
+    volumes:
+      - db:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "ac@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "5050:80"
+    depends_on:
+      - psql
+    networks:
+      - psql-app
+    volumes:
+      - db_pgadmin:/var/lib/pgadmin
+volumes:
+    db:
+    db_pgadmin:
+networks:
+    psql-app:
